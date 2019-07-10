@@ -1,11 +1,30 @@
+# 产品或项目名称、软件开发公司名称
+productName: tk passage
+companyName: JK
+
+# 产品版本、版权年份
+productVersion: V0.1
+copyrightYear: 2019
+
+
 server:
   port: 5000
   servlet:
-    context-path: /passage
+    context-path: /
 
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/passage?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3306/passage?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
     driver-class-name: com.mysql.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.tk.passage.pojo
+
+
+logging:
+  level:
+    com.tk.passage.dao : debug
+
