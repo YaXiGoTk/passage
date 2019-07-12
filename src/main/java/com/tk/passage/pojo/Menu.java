@@ -15,6 +15,7 @@ public class Menu {
     private String name;
     private String url;
     private String icon;
+    private Integer isleaf;
     private Integer parentid;
     private List<Menu>child;
 
@@ -64,5 +65,13 @@ public class Menu {
 
     public void setParentid(Integer parentid) {
         this.parentid = parentid;
+    }
+
+    public Integer getIsleaf() {
+        return isleaf;
+    }
+
+    public void setIsleaf(Integer isleaf) {
+        this.isleaf = isleaf;
     }
 }
