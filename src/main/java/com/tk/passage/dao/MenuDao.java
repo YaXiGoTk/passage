@@ -8,4 +8,6 @@ public interface MenuDao {
 
 
     public List<Menu>getMenu();
+
+    public void addMenu(Menu menu);
 }
