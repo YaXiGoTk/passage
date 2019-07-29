@@ -24,6 +24,11 @@
 
     </select>
 
+
+    <select id="getParentMenu" resultMap="menu">
+        select * from menu where parentid is null
+    </select>
+
     <insert id="addMenu" parameterType="com.tk.passage.pojo.Menu">
         INSERT INTO menu (name,url,icon,isleaf,parentid)
         VALUES (#{name},#{url},#{icon},#{isleaf},#{parentid})

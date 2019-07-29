@@ -20,11 +20,24 @@ public class MenuController {
 
 
 
-    
+    @RequestMapping(value = "/getMenuFilterData")
+    public Object getMenuFilterData(@RequestBody Menu menu){
+        List menuList = menuDao.getMenu(menu);
+        return menuList;
+
+    }
+
 
     @RequestMapping(value = "/getMenu")
-    public Object getMenu(){
-        List menuList = menuDao.getMenu();
+    public Object getMenu(@RequestBody Menu menu){
+        List menuList = menuDao.getMenu(menu);
+        return menuList;
+
+    }
+
+    @RequestMapping(value = "/getParentMenu")
+    public Object getParentMenu(@RequestBody Menu menu){
+        List menuList = menuDao.getMenu(menu);
         return menuList;
 
     }
