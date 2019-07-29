@@ -21,7 +21,7 @@ public class MenuController {
 
 
     @RequestMapping(value = "/getMenuFilterData")
-    public Object getMenuFilterData(@RequestBody Menu menu){
+    public Object getMenuFilterData(Menu menu){
         List menuList = menuDao.getMenu(menu);
         return menuList;
 

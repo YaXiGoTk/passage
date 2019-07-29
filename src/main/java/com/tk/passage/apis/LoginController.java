@@ -2,14 +2,16 @@ package com.tk.passage.apis;
 
 
 import com.tk.passage.pojo.User;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
+import com.tk.passage.utils.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 
 /**
  * @program: passage
@@ -22,24 +24,23 @@ import java.util.Date;
 public class LoginController {
 
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
 
-    @PostMapping(value = "login")
+    @PostMapping(value = "/login")
     public Object login(@RequestBody User user){
 
-        //添加用户认证信息
-        Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(
-                user.getUsername(),
-                user.getPassword());
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken  =
+                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
 
+        Authentication authenticate = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
-        //进行验证，这里可以捕获异常，然后返回对应信息
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
 
-        //完成登录
-        subject.login(usernamePasswordToken);
+        String token = JwtUtil.generateJwt(user.getUsername());
 
-        return null;
+        return token;
     }
 
 
