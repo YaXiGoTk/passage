@@ -41,7 +41,7 @@ public class JwtUtil {
                     .withClaim("loginName",loginName)//设置自定义，加上登陆用户名
                     .withIssuer("passage")//签名是有谁生成 例如 服务器
                     .withSubject("this is passage token")//签名的主题
-                    .withExpiresAt(new Date((System.currentTimeMillis() / 1000 / 10 + 60 * 60 * 2 / 10) * 10 * 1000))//签名过期的时间
+                    .withExpiresAt(new Date((System.currentTimeMillis() / 1000 / 10 + 60 / 10) * 10 * 1000))//签名过期的时间
                     .sign(algorithm);
                     return token;
         } catch (JWTCreationException exception){
@@ -67,6 +67,7 @@ public class JwtUtil {
 
         } catch (JWTVerificationException exception){
             //Invalid signature/claims
+            throw exception;
         }
         return null;
     }
@@ -74,6 +75,6 @@ public class JwtUtil {
     public static void main(String[] args) {
         generateJwt("tkang");
         //两小时
-        System.out.println(new Date((System.currentTimeMillis() / 1000 / 10 + 60 * 60 * 2 / 10) * 10 * 1000));
+        System.out.println(new Date((System.currentTimeMillis() / 1000 / 10 + 60 / 10) * 10 * 1000));
     }
 }

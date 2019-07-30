@@ -9,6 +9,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -31,9 +32,15 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
+        String username = null;
+        try {
+            username = JwtUtil.verifyJwt(authHeader);
+        }catch (Exception e){
+            ServletOutputStream out = httpServletResponse.getOutputStream();
+            out.write(e.getMessage().getBytes());
+            out.flush();
 
-        String username = JwtUtil.verifyJwt(authHeader);
-
+        }
         if (username!=null){
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                     username, null,new ArrayList<GrantedAuthority>());
