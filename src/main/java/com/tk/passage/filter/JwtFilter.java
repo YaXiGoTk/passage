@@ -28,7 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // 从http头部读取jwt
         String authHeader = httpServletRequest.getHeader("Authorization");
         // 判断是否有token
-        if (authHeader == null) {
+        if (authHeader == null || "null".equals(authHeader)) {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
