@@ -38,7 +38,7 @@ public class LoginController {
 
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
-        String token = JwtUtil.generateJwt(user.getUsername());
+        String token = JwtUtil.generateJwt(user.getUsername(), user.getRoleid().toString());
 
         return token;
     }
