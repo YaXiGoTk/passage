@@ -16,4 +16,8 @@ public interface MenuDao {
 
 
     public List<Menu>getParentMenu(Menu menu);
+
+    public List<Menu>getMenuByRole(Integer roldid);
 }
+
+

@@ -34,4 +34,12 @@
         VALUES (#{name},#{url},#{icon},#{isleaf},#{parentid})
     </insert>
 
+    <select id="getMenuByRole" parameterType="java.lang.Integer" resultMap="menu">
+        SELECT * FROM menu m
+        RIGHT JOIN (select roleid,menuid from  role_menu where roleid = #{roleid}) r
+        on
+        m.id =r.menuid
+
+    </select>
+
 </mapper>

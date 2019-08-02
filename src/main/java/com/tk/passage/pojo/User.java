@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @program: passage
@@ -20,6 +21,8 @@ public class User implements UserDetails {
     private String avatar;
     private Date createdate;
     private Integer roleid;
+    private List<GrantedAuthority> grantedAuthorities;
+    private List<Menu> menuAuthorities;
 
     public User(Integer id, String username, String password, String avatar, Date createdate, Integer roleid) {
         this.id = id;
@@ -32,7 +35,23 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return grantedAuthorities;
+    }
+
+    public void setGrantedAuthorities(List<GrantedAuthority> grantedAuthorities) {
+        this.grantedAuthorities = grantedAuthorities;
+    }
+
+    public List<GrantedAuthority> getGrantedAuthorities() {
+        return grantedAuthorities;
+    }
+
+    public List<Menu> getMenuAuthorities() {
+        return menuAuthorities;
+    }
+
+    public void setMenuAuthorities(List<Menu> menuAuthorities) {
+        this.menuAuthorities = menuAuthorities;
     }
 
     @Override

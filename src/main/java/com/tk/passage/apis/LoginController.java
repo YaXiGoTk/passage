@@ -1,7 +1,9 @@
 package com.tk.passage.apis;
 
 
+import com.tk.passage.pojo.ResponseData;
 import com.tk.passage.pojo.User;
+import com.tk.passage.service.UserService;
 import com.tk.passage.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,23 +26,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
 
+
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private UserService userService;
+
 
 
     @PostMapping(value = "/login")
     public Object login(@RequestBody User user){
 
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken  =
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
+        ResponseData responseData = userService.login(user);
 
-        Authentication authenticate = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        return responseData;
+    }
 
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
+    @PostMapping(value = "/test")
+    public Object test(){
 
-        String token = JwtUtil.generateJwt(user.getUsername(), user.getRoleid().toString());
 
-        return token;
+        return "test";
     }
 
 

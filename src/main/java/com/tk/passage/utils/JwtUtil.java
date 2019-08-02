@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class JwtUtil {
 
-    public static String generateJwt(String loginName, String roleName){
+    public static String generateJwt(String loginName){
 
         try {
 
@@ -39,7 +39,6 @@ public class JwtUtil {
                     .withHeader(map)
                     /*设置 载荷 Payload*/
                     .withClaim("loginName",loginName)//设置自定义，加上登陆用户名
-                    .withClaim("role",roleName)
                     .withIssuer("passage")//签名是有谁生成 例如 服务器
                     .withSubject("this is passage token")//签名的主题
                     .withExpiresAt(new Date((System.currentTimeMillis() / 1000 / 10 + 60 * 60 / 10) * 10 * 1000))//签名过期的时间
@@ -74,7 +73,7 @@ public class JwtUtil {
     }
 
     public static void main(String[] args) {
-        generateJwt("tkang", "admin");
+        //generateJwt("tkang", "admin");
         //两小时
         System.out.println(new Date((System.currentTimeMillis() / 1000 / 10 + 60 / 10) * 10 * 1000));
     }
