@@ -53,15 +53,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 // 由于使用的是JWT，我们这里不需要csrf
                 .csrf().disable()
-                // 基于token，所以不需要session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 // 设置权限
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/test").hasRole("ADMIN")
                 .anyRequest().authenticated();
         // 添加JWT过滤器，JWT过滤器在用户名密码认证过滤器之前
-        http.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+        // http.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
         // 禁用缓存
 //      http.headers().cacheControl();
     }
