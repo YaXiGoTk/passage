@@ -35,7 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     // 获取AuthenticationManager（认证管理器），可以在其他地方使用
-    @Bean(name="authenticationManagerBean")
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
@@ -56,7 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 设置权限
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/test").hasRole("ADMIN")
                 .anyRequest().authenticated();
         // 添加JWT过滤器，JWT过滤器在用户名密码认证过滤器之前
         // http.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
