@@ -7,6 +7,8 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.tk.passage.pojo.User;
+
 
 import java.util.Date;
 import java.util.HashMap;
@@ -21,7 +23,7 @@ import java.util.Map;
 
 public class JwtUtil {
 
-    public static String generateJwt(String loginName){
+    public static String generateJwt(User user){
 
         try {
 
@@ -38,7 +40,8 @@ public class JwtUtil {
                     //构建头部信息
                     .withHeader(map)
                     /*设置 载荷 Payload*/
-                    .withClaim("loginName",loginName)//设置自定义，加上登陆用户名
+                    .withClaim("loginName",user.getUsername())//设置自定义，加上登陆用户名
+                    .withClaim("password",user.getPassword())
                     .withIssuer("passage")//签名是有谁生成 例如 服务器
                     .withSubject("this is passage token")//签名的主题
                     .withExpiresAt(new Date((System.currentTimeMillis() / 1000 / 10 + 60 * 60 / 10) * 10 * 1000))//签名过期的时间
@@ -51,7 +54,7 @@ public class JwtUtil {
 
     }
 
-    public static String verifyJwt(String token){
+    public static Map verifyJwt(String token){
         try {
             Algorithm algorithm = Algorithm.HMAC256("secret");
             JWTVerifier verifier = JWT.require(algorithm)
@@ -59,17 +62,18 @@ public class JwtUtil {
                     .build(); //Reusable verifier instance
             DecodedJWT jwt = verifier.verify(token);
             Map<String, Claim> claims = jwt.getClaims();    //Key is the Claim name
-            Claim claim = claims.get("loginName");
-            String username = claim.asString();
-            if (username !=null){
-                return username;
-            }
+            Claim loginName = claims.get("loginName");
+            Claim password = claims.get("password");
+
+            Map loginUser = new HashMap();
+            loginUser.put("loginName",loginName.asString());
+            loginUser.put("password",password.asString());
+            return loginUser;
 
         } catch (JWTVerificationException exception){
             //Invalid signature/claims
             throw exception;
         }
-        return null;
     }
 
     public static void main(String[] args) {

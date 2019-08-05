@@ -1,7 +1,10 @@
 package com.tk.passage.filter;
 
 import com.tk.passage.utils.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * @program: passage
@@ -23,6 +27,10 @@ import java.util.ArrayList;
  **/
 
 public class JwtFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         // 从http头部读取jwt
@@ -32,24 +40,22 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
-        String username = null;
+        Map user = null;
         try {
-            username = JwtUtil.verifyJwt(authHeader);
+            user = JwtUtil.verifyJwt(authHeader);
         }catch (Exception e){
             ServletOutputStream out = httpServletResponse.getOutputStream();
             out.write(e.getMessage().getBytes());
             out.flush();
 
         }
-        if (username!=null){
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                    username, null,new ArrayList<GrantedAuthority>());
+        if (user!=null){
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken  =
+                    new UsernamePasswordAuthenticationToken(user.get("loginName"), user.get("password"));
 
-            // 把请求的信息设置到UsernamePasswordAuthenticationToken details对象里面，包括发请求的ip等
-            auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+            Authentication authenticate = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
-            // 设置认证信息
-            SecurityContextHolder.getContext().setAuthentication(auth);
+            SecurityContextHolder.getContext().setAuthentication(authenticate);
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
