@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.security.auth.login.LoginException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -35,8 +36,22 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         // 从http头部读取jwt
         String authHeader = httpServletRequest.getHeader("Authorization");
+        String uri = httpServletRequest.getRequestURI();
+        if ("/login".equals(uri)){
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+            return;
+        }
         // 判断是否有token
         if (authHeader == null || "null".equals(authHeader)) {
+            try {
+                throw new LoginException("no token");
+            } catch (LoginException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        if ( SecurityContextHolder.getContext().getAuthentication()==null){
+            httpServletResponse.getWriter().print("登录超时请重新登录");
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
@@ -48,14 +63,6 @@ public class JwtFilter extends OncePerRequestFilter {
             out.write(e.getMessage().getBytes());
             out.flush();
 
-        }
-        if (user!=null){
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken  =
-                    new UsernamePasswordAuthenticationToken(user.get("loginName"), user.get("password"));
-
-            Authentication authenticate = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-
-            SecurityContextHolder.getContext().setAuthentication(authenticate);
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
