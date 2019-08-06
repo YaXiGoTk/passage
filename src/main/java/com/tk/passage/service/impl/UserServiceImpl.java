@@ -52,23 +52,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseData login(User user) {
-        Map reslt = new HashMap();
+        Map result = new HashMap();
         try {
             String token = JwtUtil.generateJwt(user);
 
             UsernamePasswordAuthenticationToken secUser = new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword());
             Authentication authentication = authenticationManager.authenticate(secUser);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            reslt.put("user", user.getUsername());
-            reslt.put("token", token);
-
-
-            return new ResponseData(200,"success",reslt);
+            User loginUser = (User) authentication.getPrincipal();
+            result.put("user", user.getUsername());
+            result.put("token", token);
+            result.put("authorities",authentication.getAuthorities());
+            result.put("menuAuthorities",loginUser.getMenuAuthorities());
+            return new ResponseData(200,"success",result);
 
         }catch (AuthenticationException e){
-            reslt.put("user", user.getUsername());
-            reslt.put("reason", e.getMessage());
-            return new ResponseData(400,"faild",reslt);
+            result.put("user", user.getUsername());
+            result.put("reason", e.getMessage());
+            return new ResponseData(400,"faild",result);
         }
     }
 

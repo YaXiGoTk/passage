@@ -62,7 +62,7 @@ public class JwtFilter extends OncePerRequestFilter {
             ServletOutputStream out = httpServletResponse.getOutputStream();
             out.write(e.getMessage().getBytes());
             out.flush();
-
+            return;
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }

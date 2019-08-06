@@ -44,7 +44,7 @@ public class JwtUtil {
                     .withClaim("password",user.getPassword())
                     .withIssuer("passage")//签名是有谁生成 例如 服务器
                     .withSubject("this is passage token")//签名的主题
-                    .withExpiresAt(new Date((System.currentTimeMillis() / 1000 / 10 + 60 * 60 / 10) * 10 * 1000))//签名过期的时间
+                    .withExpiresAt(new Date((System.currentTimeMillis() / 1000 / 10 + 60 * 60  / 10) * 10 * 1000))//签名过期的时间
                     .sign(algorithm);
                     return token;
         } catch (JWTCreationException exception){
@@ -54,8 +54,7 @@ public class JwtUtil {
 
     }
 
-    public static Map verifyJwt(String token){
-        try {
+    public static Map verifyJwt(String token) throws JWTVerificationException{
             Algorithm algorithm = Algorithm.HMAC256("secret");
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer("passage")
@@ -70,10 +69,6 @@ public class JwtUtil {
             loginUser.put("password",password.asString());
             return loginUser;
 
-        } catch (JWTVerificationException exception){
-            //Invalid signature/claims
-            throw exception;
-        }
     }
 
     public static void main(String[] args) {

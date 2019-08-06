@@ -50,9 +50,8 @@ public class MyUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> auths = new ArrayList<>();
         //获取角色名
         String roleName = roleService.selectByRoleCode(user.getRoleid()).getName();
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleName);
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_"+roleName.toUpperCase());
         auths.add(authority);
-        auths.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         user.setMenuAuthorities(menuAuthorities);
         user.setGrantedAuthorities(auths);
         return user;
