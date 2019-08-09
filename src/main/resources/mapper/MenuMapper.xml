@@ -35,10 +35,10 @@
     </insert>
 
     <select id="getMenuByRole" parameterType="java.lang.Integer" resultMap="menu">
-        SELECT * FROM menu m
+       SELECT * FROM menu m
         RIGHT JOIN (select roleid,menuid from  role_menu where roleid = #{roleid}) r
         on
-        m.id =r.menuid
+        m.id =r.menuid  where m.parentid is null
 
     </select>
 

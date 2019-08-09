@@ -44,7 +44,7 @@ public class JwtUtil {
                     .withClaim("password",user.getPassword())
                     .withIssuer("passage")//签名是有谁生成 例如 服务器
                     .withSubject("this is passage token")//签名的主题
-                    .withExpiresAt(new Date((System.currentTimeMillis() / 1000 / 10 + 60 * 60  / 10) * 10 * 1000))//签名过期的时间
+                    .withExpiresAt(new Date((System.currentTimeMillis() / 1000 / 10 + 60  / 10) * 10 * 1000))//签名过期的时间
                     .sign(algorithm);
                     return token;
         } catch (JWTCreationException exception){
