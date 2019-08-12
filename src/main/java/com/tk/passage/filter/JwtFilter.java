@@ -59,10 +59,7 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             user = JwtUtil.verifyJwt(authHeader);
         }catch (Exception e){
-            ServletOutputStream out = httpServletResponse.getOutputStream();
-            out.write(e.getClass().getSimpleName().getBytes());
-            out.flush();
-            return;
+            throw e;
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
